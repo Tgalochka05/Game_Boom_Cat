@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Быстрый клик - Игра на реакцию</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <audio src="{% static 'sounds/click.mp3' %}"></audio>
+    <audio src="{% static 'sounds/success.mp3' %}"></audio>
+    <audio src="{% static 'sounds/background.mp3' %}"></audio>
+</head>
+<body>
+    <!-- Основной контейнер игры -->
+    <div class="game-container">
+        <!-- Экран авторизации -->
+        <div id="auth-screen">
+            <h1>Поиск Единицы</h1>
+            <div id="auth-forms">
+                <div id="login-form">
+                    <h3>Вход</h3>
+                    <input type="text" id="login-username" placeholder="Логин">
+                    <input type="password" id="login-password" placeholder="Пароль">
+                    <button onclick="loginUser()">Войти</button>
+                    <p class="switch-link">Нет аккаунта?<button onclick="toggleAuth('register')">Регистрация</button></p>
+                </div>
+                <div id="register-form">
+                    <h3>Регистрация</h3>
+                    <input type="text" id="reg-username" placeholder="Логин">
+                    <input type="email" id="reg-email" placeholder="Email">
+                    <input type="password" id="reg-password" placeholder="Пароль">
+                    <button onclick="registerUser()">Создать аккаунт</button>
+                    <p class="switch-link">Есть аккаунт?<button onclick="toggleAuth('login')">Вход</button></p>
+                </div>
+            </div>
+            <div id="auth-error" class="error-msg"></div>
+            <button onclick="showLeaderboard()" class="secondary-btn" style="width: auto; padding: 10px 20px;">
+                Посмотреть таблицу лидеров
+            </button>
+        </div>
+        <!-- Экран начала игры -->
+        <div id="start-screen" class="hidden">
+            <h1>Игра "Взорви кота!"</h1>
+            <div class="form-group">
+                <h3 id="user-name">Имя: Загрузка...</h3>
+                
+                <div id="profile-view">
+                    <h3 id="user-bio">Обо мне: -</h3>
+                    <h3 id="user-dob">Дата рождения: -</h3>
+                    <button onclick="toggleProfileEdit(true)" style="margin-top: 10px;">Редактировать профиль</button>
+                </div>
+
+                <div id="profile-edit" class="hidden" style="margin-top: 15px; border-top: 1px solid #ccc; padding-top: 10px;">
+                    <input type="text" id="edit-bio" placeholder="Обо мне (новое описание)">
+                    <p>Дата рождения:</p>
+                    <input type="date" id="edit-dob">
+                    <button onclick="saveUserProfile()">Сохранить изменения</button>
+                    <button onclick="toggleProfileEdit(false)" style="background-color: #666;">Отмена</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="difficulty">Уровень сложности:</label>
+                <select id="difficulty">
+                    <option value="easy">Легкий</option>
+                    <option value="medium">Средний</option>
+                    <option value="hard">Сложный</option>
+                </select>
+            </div>
+            <button id="startBtn">Начать новую игру</button>
+            <button id="tutorialBtn">Обучение</button>
+            <button onclick="showLeaderboard()">Таблица лидеров</button>
+            <button onclick="showMyAchievement()">Мои достижения</button>
+            <button onclick="showMyGameSession()">Мои сохранённые игры</button>
+            <button onclick="showDailyQuest()">Ежедневные задания</button>
+            <button onclick="logoutUser()" class="secondary-btn">Выйти из аккаунта</button>
+        </div>
+
+        <!-- Экран обучения -->
+        <div id="tutorial-screen">
+            <h2>Обучение</h2>
+            <div class="tutorial-content">
+                <p>Цель игры - кликать по появляющимся котам как можно быстрее.</p>
+                <p>Чем быстрее вы кликаете, тем больше очков получаете.</p>
+                <p>На разных уровнях сложности:</p>
+                <ul>
+                    <li><strong>Легкий:</strong> Большие котики, медленное исчезновение</li>
+                    <li><strong>Средний:</strong> Средние котики, нормальная скорость</li>
+                    <li><strong>Сложный:</strong> Маленькие котики, быстрое исчезновение</li>
+                </ul>
+                <p>Секрет: попробуйте нажать секретную комбинацию клавиш во время игры!</p>
+                <button id="backToMenuBtn">Вернуться в меню</button>
+            </div>
+        </div>
+
+        <!-- Таблица Ежедневных заданий -->
+        <div id="dailyquest-screen" class="hidden">
+            <h2>Ежедневные задания</h2>
+            <ul id="dailyquest-list">Loading...</ul>
+            <button onclick="hideDailyQuest()">Назад</button>
+        </div>
+
+        <!-- Таблица лидеров -->
+        <div id="leaderboard-screen" class="hidden">
+            <h2>Топ игроков</h2>
+            <div class="filter-buttons" style="margin-bottom: 20px;">
+                <button onclick="updateLeaderboard(1)" style="margin-right: 5px;">Легкий</button>
+                <button onclick="updateLeaderboard(2)" style="margin-right: 5px;">Средний</button>
+                <button onclick="updateLeaderboard(3)">Сложный</button>
+            </div>
+            <ul id="leaderboard-list">Loading...</ul>
+            <button onclick="hideLeaderboard()">Назад</button>
+        </div>
+
+        <!-- Таблица достижений -->
+        <div id="achievement-screen" class="hidden">
+            <h2>Мои достижения</h2>
+            <ul id="achievement-list">Loading...</ul>
+            <button onclick="hideAchievement()">Назад</button>
+        </div>
+
+        <!-- Игровые сессии -->
+        <div id="gamesession-screen" class="hidden">
+            <h2>Мои достижения</h2>
+            <ul id="gamesession-list">Loading...</ul>
+            <button onclick="hideGamesession()">Назад</button>
+        </div>
+
+        <!-- Игровой экран -->
+        <div id="game-screen">
+            <div class="game-header">
+                <div class="score">Очки: <span id="scoreValue">0</span></div>
+                <div class="time">Время: <span id="timeValue">60</span>с</div>
+                <div class="level">Уровень: <span id="levelValue">Легкий</span></div>
+                <div class="reaction">Реакция: <span id="reactionValue">-</span>мс</div>
+            </div>
+            <div class="game-area" id="gameArea"></div> <!-- Область, где появляются цели -->
+            <div class="game-controls">
+                <button id="pauseBtn">Пауза</button>
+                <button id="soundBtn">Звук Вкл</button>
+                <button onclick="saveCurrentGame()">Сохранить</button>
+            </div>
+        </div>
+
+        <!-- Экран окончания игры -->
+        <div id="end-screen">
+            <h2>Игра окончена!</h2>
+            <div class="result">Ваш результат: <span id="finalScore">0</span> очков</div>
+            <div class="avg-reaction">Средняя реакция: <span id="avgReaction">0</span>мс</div>
+            <button id="restartBtn">Играть снова</button>
+            <button id="menuBtn">Главное меню</button>
+            <div class="secret-message" id="secretMessage"></div> <!-- Сообщение о секретной пасхалке -->
+        </div>
+    </div>
+
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

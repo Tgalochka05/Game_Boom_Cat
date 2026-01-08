@@ -1,0 +1,229 @@
+/* Основные стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+#start-screen, #tutorial-screen, #game-screen, #end-screen {
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+#start-screen h1 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+}
+
+.form-group {
+    margin: 15px 0;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #34495e;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.error {
+    color: #e74c3c;
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 5px;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.tutorial-content {
+    text-align: left;
+    margin: 20px 0;
+    line-height: 1.6;
+}
+
+.tutorial-content p, .tutorial-content ul {
+    margin-bottom: 15px;
+}
+
+.tutorial-content ul {
+    padding-left: 20px;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.game-area {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background-color: #ecf0f1;
+    border-radius: 5px;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+.target {
+    position: absolute;
+    cursor: pointer;
+    background-image: url('images/target.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.1s; /* Анимация котика */
+}
+
+.target:hover {
+    transform: scale(1.1);
+}
+
+.target.easy {
+    width: 80px;
+    height: 80px;
+}
+
+.target.medium {
+    width: 60px;
+    height: 60px;
+}
+
+.target.hard {
+    width: 40px;
+    height: 40px;
+}
+
+.explosion {
+    position: absolute;
+    background-image: url('images/explosion.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+
+.game-controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.end-screen h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.result, .avg-reaction {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #34495e;
+}
+
+.secret-message {
+    margin-top: 20px;
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.hidden {
+    display: none;
+}
+.done {
+    opacity: 0.6;
+    text-decoration: line-through;
+    color: #6f6;
+}
+#zoloto{
+    color: rgb(255, 208, 0);
+}
+#serebro{
+    color: rgb(177, 177, 177);
+}
+#bronze{
+    color: rgb(110, 87, 36);
+}
+#ach_title{
+    font-size: 1.5rem;
+    color:rgb(176, 255, 102);
+    -webkit-text-stroke: 1px;
+    -webkit-text-stroke-color: #2e5236;
+}
+/* Адаптивность */
+@media (max-width: 768px) {
+    .game-container {
+        max-width: 95%;
+    }
+    
+    .game-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .game-area {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .start-screen h1 {
+        font-size: 2rem;
+    }
+    
+    .game-area {
+        height: 250px;
+    }
+    
+    button {
+        padding: 8px 16px;
+    }
+}
