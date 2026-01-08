@@ -74,6 +74,10 @@ docker-compose exec web python manage.py createsuperuser
 *   Профиль пользователя: **http://localhost:8000/api/users/me/**
 *   **http://localhost:8000/swagger/**
 
+Также перед использованием в продакшн не забудьте скопировать все статические файлы через команду: 
+```bash
+docker-compose exec web python manage.py collectstatic --noinput
+```
 ---
 
 ## 🛑 Остановка проекта
