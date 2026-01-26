@@ -55,5 +55,7 @@ urlpatterns = [
     path('', IndexView.as_view(), name='index'),
 ]
 
+handler404 = 'django.views.defaults.page_not_found'
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
